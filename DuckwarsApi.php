@@ -173,6 +173,23 @@ class Camp
         return $this->y;
     }
 }
+################################################################################
+/**
+ * Dieses Interface sollte vom Bot implementiert werden.
+ */
+interface IBot
+{
+    /**
+     * Wird aufgerufen wenn der nächste Zug durchgeführt werden kann. Der
+     * aktuelle Spielzustand wird dabei übergeben.
+     */
+    public function doTurn($gamestate);
+
+    /**
+     * Wird aufgerufen um den Namen des Bots abzufragen.
+     */
+    public function getName();
+}
 
 
 ?>
