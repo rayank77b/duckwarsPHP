@@ -1,7 +1,282 @@
 <?php
 
+/**
+ * Diese Klasse repräsentiert den aktuellen Spielzustand.
+ */
+class GameState
+{
+    private $armies;
+    private $camps;
 
+    /**
+     * Zur Initialisierung muss ein Spielzustandstring übergeben werden.
+     */
+    function GameState($gameStateString)
+    {
+        $this->camps = Array();
+        $this->armies = Array();
+        $this->parseGameState($gameStateString);
+    }
 
+    /**
+     * Ermittelt den Abstand zwischen zwei Camps, aufgerundend zur nächsten
+     * höheren Ganzzahl. Diese Zahl gibt die Anzahl von Zügen an die benötigt
+     * wird um die Strecke zurückzulegen.
+     */
+    function calculateDistance($source, $destination)
+    {
+        $dx = $source->getX() - $destination->getX();
+        $dy = $source->getY() - $destination->getY();
+        #return (int) Math.ceil(Math.sqrt(dx * dx + dy * dy));
+        
+    }
+
+    /**
+     * Beendet den aktuellen Zug.
+     */
+    function finishTurn()
+    {
+        echo "go".PHP_EOL;
+        flush();
+    }
+
+    /**
+     * Ermittelt die Armee mit der übergebenen ID. Die erste Armee beginnt dabei
+     * mit der 0. Achtung: Die ID kann sich von Zug zu Zug ändern, da sie nicht
+     * eindeutig vergeben wird.
+     */
+    function getArmy($id)
+    {
+        return $this->armies[$id];
+    }
+
+    /**
+     * Ermittelt das Camp mit der angegebenen ID. Das erste Camp beginnt dabei
+     * mit der 0. Die IDs sind für das ganze Match eindeutig.
+     */
+    function getCamp($id)
+    {
+        return $this->camps[$id];
+    }
+
+    /**
+     * Liefert eine Liste aller Camps.
+     */
+    function getCamps()
+    {
+        return $this->camps;
+    }
+
+    /**
+     * Ermittelt alle Camps der gegnerischen Spieler. D.h. die eigenen und
+     * neutralen Camps sind nicht enthalten.
+     */
+    function getHostileCamps()
+    {
+        $r = array();
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() >= 2)
+            {
+                array_push($r, $camp);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Ermittelt alle eigenen Truppen.
+     */
+    function getMyArmies()
+    {
+        $r = array();
+        foreach ($this->armies as $i => $army)
+        {
+            if ($army->getOwner() == 1)
+            {
+                array_push($r, $army);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Ermittelt alle eigenen Camps.
+     */
+    function getMyCamps()
+    {
+        $r = array();
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() == 1)
+            {
+                array_push($r, $camp);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Ermittelt alle neutralen Camps. D.h. Camps die derzeit keinem Spieler
+     * gehören.
+     */
+    function getNeutralCamps()
+    {
+        $r = array();
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() == 0)
+            {
+                array_push($r, $camp);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Ermittelt alle Camps die derzeit nicht in der Hand des Spielers sind.
+     */
+    function getNotMyCamps()
+    {
+        $r = array();
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() != 1)
+            {
+                array_push($r, $camp);
+            }
+        }
+        return $r;
+    }
+
+    /**
+     * Liefert die Anzahl aller aktiven Armeen.
+     */
+    function getNumArmies()
+    {
+        return count($this->armies);
+    }
+
+    /**
+     * Liefert die Anzahl aller Camps.
+     */
+    function getNumCamps()
+    {
+        return count($this->camps);
+    }
+
+    /**
+     * Ermittelt die Anzahl Einheiten die ein Spieler pro Zug generiert/erhält.
+     */
+    function getProduction($playerID)
+    {
+        $prod = 0;
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() == playerID)
+            {
+                $prod = $prod + $camp->getProduction();
+            }
+        }
+        return $prod;
+    }
+
+    /**
+     * Ermittelt die maximale Truppenstärke eines Spielers. Dabei werden alle
+     * Einheiten in dem Camps und unterwegs gezählt.
+     */
+    function getTotalMancount($playerID)
+    {
+        $count = 0;
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() == playerID)
+            {
+                $count = $count + $camp->getMancount();
+            }
+        }
+        foreach ($this->armies as $i => $army)
+        {
+            if ($army->getOwner() == playerID)
+            {
+                $count = $count + $army->getMancount();
+            }
+        }
+        return $count;
+    }
+
+    /**
+     * Ermittelt ob ein Spieler noch am leben ist.
+     */
+    function isAlive($playerID)
+    {
+        foreach ($this->camps as $i => $camp)
+        {
+            if ($camp->getOwner() == $playerID) { return TRUE; }
+        }
+        foreach ($this->armies as $i => $army)
+        {
+            if ($army->getOwner() == $playerID) { return TRUE; }
+        }
+        return FALSE;
+    }
+
+    /**
+     * Sendet eine Truppe von einem Camp zu einem anderen. Pro Zug können
+     * beliebig viele Truppenbewegungen gestartet werden. Eine Truppenbewegung
+     * kann nicht gestoppt oder geändert werden.
+     */
+    function issueOrder($source, $dest, $mancount)
+    {
+        echo $source->getID()." ".$dest->getID()." ".$mancount.PHP_EOL;
+        flush();
+    }
+
+    /**
+     * Wird verwendet um den Spielstand zu parsen.
+     */
+    private parseGameState($gamestring)
+    {
+        unset($this->camps);
+        unset($this->armies);
+        $id = 0;
+        String[] lines = s.split("\n");
+        for (String line : lines)
+        {
+            String[] tokens = line.trim().split(" ");
+            if (tokens.length == 0)
+            {
+                continue;
+            }
+            if (tokens[0].equals("C"))
+            {
+                if (tokens.length == 6)
+                {
+                    int x = Integer.parseInt(tokens[1]);
+                    int y = Integer.parseInt(tokens[2]);
+                    int owner = Integer.parseInt(tokens[3]);
+                    int mancount = Integer.parseInt(tokens[4]);
+                    int size = Integer.parseInt(tokens[5]);
+                    camps.add(new Camp(id++, owner, mancount, size, x, y));
+                }
+            }
+            else if (tokens[0].equals("A"))
+            {
+                if (tokens.length == 7)
+                {
+                    int owner = Integer.parseInt(tokens[1]);
+                    int mancount = Integer.parseInt(tokens[2]);
+                    int source = Integer.parseInt(tokens[3]);
+                    int destination = Integer.parseInt(tokens[4]);
+                    int totalTripLength = Integer.parseInt(tokens[5]);
+                    int turnsRemaining = Integer.parseInt(tokens[6]);
+                    armies.add(new Army(owner, mancount, source, destination, totalTripLength, turnsRemaining));
+                }
+            }
+        }
+    }
+}
+################################################################################
 /**
  * Repräsentiert eine Armee die auf dem Weg zu einem anderen Camp ist.
  */
@@ -182,7 +457,7 @@ class Helper
     /**
      * Durch den Aufruf wird die Verarbeitungsschleife gestartet.
      */
-    public static function executeBot()
+    public static function executeBot($bot)
     {
         try
         {
@@ -190,18 +465,16 @@ class Helper
             $line = trim(fgets(STDIN));
             while ($line >= 0)
             {
-                #echo "--$line--\n";
                 if (strcmp($line,"go")==0)
                 {
-                    echo "$message\n";
-                    #$pw = new GameState($message);
-                    #$bot.doTurn(pw);
-                    #pw.finishTurn();
+                    $pw = new GameState($message);
+                    $bot->doTurn($pw);
+                    $pw->finishTurn();
                     $message = "";
                 }
                 elseif (strcmp($line, "name?")==0)
                 {
-                    echo "botsname\n"; #$bot->getName()+"\n";
+                    echo $bot->getName().PHP_EOL;
                     flush();
                 }
                 else
