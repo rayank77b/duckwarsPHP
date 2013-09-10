@@ -175,6 +175,51 @@ class Camp
 }
 ################################################################################
 /**
+ * Hilfsklasse welche die Verarbeitungsschleife implementiert.
+ */
+class Helper
+{
+    /**
+     * Durch den Aufruf wird die Verarbeitungsschleife gestartet.
+     */
+    public static function executeBot()
+    {
+        try
+        {
+            $message="";
+            $line = trim(fgets(STDIN));
+            while ($line >= 0)
+            {
+                #echo "--$line--\n";
+                if (strcmp($line,"go")==0)
+                {
+                    echo "$message\n";
+                    #$pw = new GameState($message);
+                    #$bot.doTurn(pw);
+                    #pw.finishTurn();
+                    $message = "";
+                }
+                elseif (strcmp($line, "name?")==0)
+                {
+                    echo "botsname\n"; #$bot->getName()+"\n";
+                    flush();
+                }
+                else
+                {
+                    $message = $message.$line.PHP_EOL;
+                }
+                
+                $line = trim(fgets(STDIN));
+            }
+        }
+        catch (Exception $e)
+        {
+            file_put_contents('php://stderr', $e->getMessage());
+        }
+    }
+}
+################################################################################
+/**
  * Dieses Interface sollte vom Bot implementiert werden.
  */
 interface IBot

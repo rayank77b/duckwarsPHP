@@ -39,7 +39,7 @@ class GameState
     function void finishTurn()
     {
         System.out.println("go");
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -231,7 +231,7 @@ class GameState
     function void issueOrder(Camp source, Camp dest, $mancount)
     {
         System.out.println(source.getID() + " " + dest.getID() + " " + mancount);
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -278,68 +278,5 @@ class GameState
         }
     }
 }
-/**
- * Dieses Interface sollte vom Bot implementiert werden.
- */
-function interface IBot
-{
-    /**
-     * Wird aufgerufen wenn der nächste Zug durchgeführt werden kann. Der
-     * aktuelle Spielzustand wird dabei übergeben.
-     */
-    void doTurn(GameState gamestate);
 
-    /**
-     * Wird aufgerufen um den Namen des Bots abzufragen.
-     */
-    String getName();
-}/**
- * Hilfsklasse welche die Verarbeitungsschleife implementiert.
- */
-class Helper
-{
-    /**
-     * Durch den Aufruf wird die Verarbeitungsschleife gestartet.
-     */
-    function static void executeBot(IBot bot)
-    {
-        try
-        {
-            String line = "";
-            String message = "";
-            int c;
-            while ((c = System.in.read()) >= 0)
-            {
-                switch (c)
-                {
-                    case '\n':
-                        if (line.equals("go"))
-                        {
-                            GameState pw = new GameState(message);
-                            bot.doTurn(pw);
-                            pw.finishTurn();
-                            message = "";
-                        }
-                        else if (line.equals("name?"))
-                        {
-                            System.out.println(bot.getName());
-                            System.out.flush();
-                        }
-                        else
-                        {
-                            message += line + System.lineSeparator();
-                        }
-                        line = "";
-                        break;
-                    default:
-                        line += (char) c;
-                        break;
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            System.err.println(e.getMessage());
-        }
-    }
-}
+
