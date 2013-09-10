@@ -1,4 +1,7 @@
 <?php
+
+
+
 /**
  * Repräsentiert eine Armee die auf dem Weg zu einem anderen Camp ist.
  */
@@ -70,6 +73,104 @@ class Army
     function getTurnsRemaining()
     {
         return $this->turnsRemaining;
+    }
+}
+################################################################################
+/**
+ * Repräsentiert ein Camp.
+ */
+class Camp
+{
+    private $id;
+    private $mancount;
+    private $owner;
+    private $size;
+    private $x;
+    private $y;
+
+    /**
+     * Konstruktor
+     */
+    function Camp($id, $campOwner, $campMancount, $campSize, $posX, $posY)
+    {
+        $this->id = $id;
+        $this->owner = $campOwner;
+        $this->mancount = $campMancount;
+        if ($campSize < 1)
+        {
+            $campSize = 1;
+        }
+        if ($campSize > 5)
+        {
+            $campSize = 5;
+        }
+        $this->size = $campSize;
+        $this->x = $posX;
+        $this->y = $posY;
+    }
+
+    /**
+     * Liefert die ID des Camps.
+     */
+    function getID()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Liefert die Mannstärke des Camps.
+     */
+    function getMancount()
+    {
+        return $this->mancount;
+    }
+
+    /**
+     * Liefert die maximale Anzahl Männer die dieses Camp aufnehmen kann.
+     */
+    function getMaxMancount()
+    {
+        return $this->size * 20;
+    }
+    
+    /**
+     * Liefert die Wachstumsrate um der die Anzahl Männer pro Runde steigt.
+     */
+    function getGrowthrate()
+    {
+        return 1 + $this->mancount / 20;
+    }
+
+    /**
+     * Liefert die ID des Spielers dem dieses Camp gehört.
+     */
+    function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Liefert die Größe des Camps (1-5).
+     */
+    function getSize()
+    {
+        return $this->size;
+    }
+
+    /**
+     * Liefert die X-Koordinate des Camps.
+     */
+    function getX()
+    {
+        return $this->x;
+    }
+
+    /**
+     * Liefert die Y-Koordinate des Camps.
+     */
+    function getY()
+    {
+        return $this->y;
     }
 }
 
