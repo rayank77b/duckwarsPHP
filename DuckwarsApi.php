@@ -16,12 +16,12 @@ class Army
      */
     function Army($armyOwner, $armySize, $armySource, $armyDestination, $tripLength, $remaining)
     {
-        $hits->owner = $armyOwner;
-        $hits->mancount = $armySize;
-        $hits->source = $armySource;
-        $hits->destination = $armyDestination;
-        $hits->turnsRemaining = $remaining;
-        $hits->tripDuration = $tripLength;
+        $this->owner = $armyOwner;
+        $this->mancount = $armySize;
+        $this->source = $armySource;
+        $this->destination = $armyDestination;
+        $this->turnsRemaining = $remaining;
+        $this->tripDuration = $tripLength;
     }
 
     /**
@@ -29,7 +29,7 @@ class Army
      */
     function getDestination()
     {
-        return $hits->destination;
+        return $this->destination;
     }
 
     /**
@@ -37,7 +37,7 @@ class Army
      */
     function getMancount()
     {
-        return $hits->mancount;
+        return $this->mancount;
     }
 
     /**
@@ -45,7 +45,7 @@ class Army
      */
     function getOwner()
     {
-        return $hits->owner;
+        return $this->owner;
     }
 
     /**
@@ -53,7 +53,7 @@ class Army
      */
     function getSource()
     {
-        return $hits->source;
+        return $this->source;
     }
 
     /**
@@ -61,7 +61,7 @@ class Army
      */
     function getTripDuration()
     {
-        return $hits->tripDuration;
+        return $this->tripDuration;
     }
 
     /**
@@ -69,7 +69,7 @@ class Army
      */
     function getTurnsRemaining()
     {
-        return $hits->turnsRemaining;
+        return $this->turnsRemaining;
     }
 }
 
