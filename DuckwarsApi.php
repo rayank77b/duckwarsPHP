@@ -13,8 +13,8 @@ class GameState
      */
     function GameState($gameStateString)
     {
-        $this->camps = Array();
-        $this->armies = Array();
+        $this->camps = array();
+        $this->armies = array();
         $this->parseGameState($gameStateString);
     }
 
@@ -27,7 +27,7 @@ class GameState
     {
         $dx = $source->getX() - $destination->getX();
         $dy = $source->getY() - $destination->getY();
-        #return (int) Math.ceil(Math.sqrt(dx * dx + dy * dy));
+        return intval(ceil(sqrt(dx * dx + dy * dy)));
         
     }
 
@@ -235,42 +235,38 @@ class GameState
     /**
      * Wird verwendet um den Spielstand zu parsen.
      */
-    private parseGameState($gamestring)
+    private function parseGameState($gamestring)
     {
         unset($this->camps);
+        $this->camps=array();
         unset($this->armies);
+        $this->armies=array();
         $id = 0;
-        String[] lines = s.split("\n");
-        for (String line : lines)
+        $lines = explode("\n",$gamestring);
+        foreach ($lines as $i => $line)
         {
-            String[] tokens = line.trim().split(" ");
-            if (tokens.length == 0)
+            $tokens = explode(" ", $line);
+            if( (count($tokens)==6) or count($tokens)==7 ) 
             {
-                continue;
-            }
-            if (tokens[0].equals("C"))
-            {
-                if (tokens.length == 6)
+                if (strcmp($tokens[0],"C")==0)
                 {
-                    int x = Integer.parseInt(tokens[1]);
-                    int y = Integer.parseInt(tokens[2]);
-                    int owner = Integer.parseInt(tokens[3]);
-                    int mancount = Integer.parseInt(tokens[4]);
-                    int size = Integer.parseInt(tokens[5]);
-                    camps.add(new Camp(id++, owner, mancount, size, x, y));
+                    $x = intval($tokens[1]);
+                    $y = intval($tokens[2]);
+                    $owner = intval($tokens[3]);
+                    $mancount = intval($tokens[4]);
+                    $size = intval($tokens[5]);
+                    array_push($this->camps, new Camp($id, $owner, $mancount, $size, $x, $y));
+                    $id = $id+1;
                 }
-            }
-            else if (tokens[0].equals("A"))
-            {
-                if (tokens.length == 7)
+                elseif (strcmp($tokens[0],"A")==0)
                 {
-                    int owner = Integer.parseInt(tokens[1]);
-                    int mancount = Integer.parseInt(tokens[2]);
-                    int source = Integer.parseInt(tokens[3]);
-                    int destination = Integer.parseInt(tokens[4]);
-                    int totalTripLength = Integer.parseInt(tokens[5]);
-                    int turnsRemaining = Integer.parseInt(tokens[6]);
-                    armies.add(new Army(owner, mancount, source, destination, totalTripLength, turnsRemaining));
+                    $owner = intval($tokens[1]);
+                    $mancount = intval($tokens[2]);
+                    $source = intval($tokens[3]);
+                    $destination = intval($tokens[4]);
+                    $totalTripLength = intval($tokens[5]);
+                    $turnsRemaining = intval($tokens[6]);
+                    array_push($this->armies, new Army($owner, $mancount, $source, $destination, $totalTripLength, $turnsRemaining));
                 }
             }
         }
