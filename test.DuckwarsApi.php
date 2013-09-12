@@ -49,9 +49,28 @@ $gs = new GameState($message);
 echo "[+] test pass\n";
 equal("getNumArmies()",$gs->getNumArmies(),6);
 equal("getNumCamps()",$gs->getNumCamps(),21);
+$c1=new Camp(0, 1,11, 3, 1, 1);
+$c2=new Camp(1, 1,12, 3, 4, 4);
+equal("calculateDistance()", $gs->calculateDistance($c1,$c2), 5);
+$a=$gs->getArmy(0);
+equal("gs->getArmy(0)", $a->getOwner(), 1);
+$c=$gs->getCamp(1);
+equal("gs->getCamp(1)", $c->getOwner(), 3);
+equal("gs->getCamps()", count($gs->getCamps()), 21);
+equal("gs->getHostileCamps()", count($gs->getHostileCamps()), 3);
+equal("getMyArmies()", count($gs->getMyArmies()), 1);
+equal("getMyCamps()", count($gs->getMyCamps()), 1);
+equal("getNeutralCamps()", count($gs->getNeutralCamps()), 17);
+equal("getNotMyCamps()", count($gs->getNotMyCamps()), 20);
+equal("getProduction()", $gs->getProduction(4), 3);
+equal("getTotalMancount()", $gs->getTotalMancount(4), 61);
+equal("isAlive()", $gs->isAlive(4), TRUE);
+equal("isAlive()", $gs->isAlive(6), FALSE);
 
 
 
 echo "\n\n[+] All tests passed ....\n\n";
+
+
 
 ?>

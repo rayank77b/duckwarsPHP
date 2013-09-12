@@ -27,7 +27,7 @@ class GameState
     {
         $dx = $source->getX() - $destination->getX();
         $dy = $source->getY() - $destination->getY();
-        return intval(ceil(sqrt(dx * dx + dy * dy)));
+        return intval(ceil(sqrt($dx * $dx + $dy * $dy)));
         
     }
 
@@ -173,9 +173,9 @@ class GameState
         $prod = 0;
         foreach ($this->camps as $i => $camp)
         {
-            if ($camp->getOwner() == playerID)
+            if ($camp->getOwner() == $playerID)
             {
-                $prod = $prod + $camp->getProduction();
+                $prod = $prod + $camp->getGrowthrate();
             }
         }
         return $prod;
@@ -190,14 +190,14 @@ class GameState
         $count = 0;
         foreach ($this->camps as $i => $camp)
         {
-            if ($camp->getOwner() == playerID)
+            if ($camp->getOwner() == $playerID)
             {
                 $count = $count + $camp->getMancount();
             }
         }
         foreach ($this->armies as $i => $army)
         {
-            if ($army->getOwner() == playerID)
+            if ($army->getOwner() == $playerID)
             {
                 $count = $count + $army->getMancount();
             }
