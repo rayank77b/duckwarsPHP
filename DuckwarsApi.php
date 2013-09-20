@@ -409,6 +409,18 @@ class Camp
      */
     function getGrowthrate()
     {
+        if ($this->owner == 0)
+        {
+            return 0;
+        }
+        if ($this->mancount == $this->getMaxMancount())
+        {
+            return 0;
+        }
+        if ($this->mancount > $this->getMaxMancount())
+        {
+            return -1;
+        }
         return 1 + $this->mancount / 20;
     }
 
