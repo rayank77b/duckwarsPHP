@@ -66,8 +66,11 @@ equal("getProduction()", $gs->getProduction(4), 3);
 equal("getTotalMancount()", $gs->getTotalMancount(4), 61);
 equal("isAlive()", $gs->isAlive(4), TRUE);
 equal("isAlive()", $gs->isAlive(6), FALSE);
-
-
+$src=$gs->getCamp(0);
+$dst=$gs->getCamp(2);
+$gs->issueOrder($src, $dst, 2);
+equal("getNumArmies()",$gs->getNumArmies(),7); 
+equal("man count in source", $src->getMancount(), 38);
 
 echo "\n\n[+] All tests passed ....\n\n";
 

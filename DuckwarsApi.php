@@ -228,6 +228,9 @@ class GameState
      */
     function issueOrder($source, $dest, $mancount)
     {
+        $source->setMancount($source->getMancount() - $mancount);
+        $dist = $this->calculateDistance($source, $dest);
+        array_push($this->armies, new Army(1, $mancount, $source->getID(), $dest->getID(), $dist, $dist));
         echo $source->getID()." ".$dest->getID()." ".$mancount.PHP_EOL;
         flush();
     }
@@ -394,6 +397,14 @@ class Camp
     function getMancount()
     {
         return $this->mancount;
+    }
+    
+    /**
+     * Ändert die Mannstärke des Camps.
+     */
+    function setMancount($count)
+    {
+        $this->mancount=$count;
     }
 
     /**
